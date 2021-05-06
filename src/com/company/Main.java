@@ -27,6 +27,9 @@ import java.util.Random;
         public static int berserkHealth = 100;
         public static int berserkDamage = 20;
 
+        public static String heroThor = "Thor";
+        public static int thorHealth = 100;
+        public static int thorDamage = 0;
 
         public static String bossName = "Shao Kahn";
         public static int bossHealth = 1500;
@@ -65,6 +68,14 @@ import java.util.Random;
 
         }
 
+        public static boolean getBossKnocked(){
+
+            Random randomBossKnocked = new Random();
+            boolean isBossKnocked = randomBossKnocked.nextBoolean();
+            return isBossKnocked;
+
+        }
+
         public static boolean isGameFinished(){
             if (bossHealth<=0){
                 System.out.println("Heroes win! " + "Mortal Kombat is finished!");
@@ -84,14 +95,15 @@ import java.util.Random;
         }
 
 
-        public static void round(){
+        public static void round() {
             roundNumber++;
             System.out.println("-------Round " + roundNumber + "-------");
-            bossHit();
-            superDamageHero = getHeroForDamageBossDefence();
+            if (thorHealth > 0 && getBossKnocked()) {
+                System.out.println("Shao Kahn is knocked by Thor this round!");
+                superDamageHero = getHeroForDamageBossDefence();
 
-            heroesHit();
-            heroForHealing = getHeroForHealing();
+                heroesHit();
+                heroForHealing = getHeroForHealing();
 
 
                 if (chanceForLucky()) {
@@ -101,37 +113,49 @@ import java.util.Random;
                     System.out.println("Lucky is not safe!");
                 }
 
-           /* if(berserkHealth > 0){
-                berserkHealth = berserkHealth - bossDamage + getBerserkBlockedHit();
-                System.out.println("Berserk " + getBerserkBlockedHit());
-                System.out.println(heroBerserk + " = Health " + berserkHealth + " = Damage [" + berserkDamage + "]");
-                bossHealth = bossHealth - berserkDamage - getBerserkBlockedHit();
-                System.out.println(heroBerserk + " = Health " + berserkHealth + " = Damage [" + berserkDamage + "]");
-            }*/
+                printStatistics();
 
-            printStatistics();
+            } else {
+                bossHit();
+                superDamageHero = getHeroForDamageBossDefence();
+
+                heroesHit();
+                heroForHealing = getHeroForHealing();
+
+
+                if (chanceForLucky()) {
+                    System.out.println("Lucky is safe!");
+                } else {
+                    luckyHealth = luckyHealth - bossDamage;
+                    System.out.println("Lucky is not safe!");
+                }
+
+                printStatistics();
+            }
         }
 
         public static void bossHit(){
 
 
-            for (int i = 0; i < heroesHealth.length; i++) {
-                if(heroesHealth[i] > 0 && bossHealth > 0) {
 
-                    if(golemHealth > 0) {
-                        heroesHealth[i] = heroesHealth[i] - bossDamage + (bossDamage / 5);
-                        golemHealth = golemHealth - ((bossDamage / 5) * (heroesHealth.length-1));
+                    for (int i = 0; i < heroesHealth.length; i++) {
+                        if (heroesHealth[i] > 0 && bossHealth > 0) {
+
+                            if (golemHealth > 0) {
+                                heroesHealth[i] = heroesHealth[i] - bossDamage + (bossDamage / 5);
+                                golemHealth = golemHealth - ((bossDamage / 5) * (heroesHealth.length - 1));
+                            } else {
+                                heroesHealth[i] = heroesHealth[i] - bossDamage;
+                            }
+                        }
                     }
-                    else {
-                        heroesHealth[i] = heroesHealth[i] - bossDamage;
-                    }
-                   }
+                    medicHealth = medicHealth - bossDamage;
+                    berserkHealth = berserkHealth - bossDamage - berserkBlockedHit;
+                    thorHealth = thorHealth - bossDamage;
+
                 }
-            medicHealth = medicHealth - bossDamage;
-            berserkHealth = berserkHealth - bossDamage - berserkBlockedHit;
 
 
-        }
 
         public static void heroesHit(){
 
@@ -185,6 +209,10 @@ import java.util.Random;
                     berserkHealth = 0;
 
                 }
+                if(thorHealth < 0){
+                    thorHealth = 0;
+
+                }
             }
 
             if(berserkHealth > 0){
@@ -193,10 +221,6 @@ import java.util.Random;
             }
 
         }
-
-
-
-
 
 
         public static String getHeroForDamageBossDefence(){
@@ -225,6 +249,7 @@ import java.util.Random;
             System.out.println(heroGolem + " = Health " + golemHealth + " = Damage [" + golemDamage + "]");
             System.out.println(heroLucky + " = Health " + luckyHealth + " = Damage [" + luckyDamage + "]");
             System.out.println(heroBerserk + " = Health " + berserkHealth + " = Damage [" + berserkDamage + "]");
+            System.out.println(heroThor + " = Health " + thorHealth + " = Damage [" + thorDamage + "]");
 
         }
     }
