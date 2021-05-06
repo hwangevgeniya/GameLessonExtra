@@ -1,5 +1,7 @@
 package com.company;
 
+import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
+
 import java.util.Random;
 
     public class Main {
@@ -16,6 +18,10 @@ import java.util.Random;
         public static String heroGolem = "Golem";
         public static int golemHealth = 100;
         public static int golemDamage = 5;
+
+        public static String heroLucky = "Lucky";
+        public static int luckyHealth = 150;
+        public static int luckyDamage = 0;
 
 
         public static String bossName = "Shao Kahn";
@@ -36,6 +42,14 @@ import java.util.Random;
             while (!isGameFinished()){
                 round();
             }
+        }
+
+        public static boolean chanceForLucky(){
+
+            Random random = new Random();
+            boolean randomBoolean = random.nextBoolean();
+            return randomBoolean;
+
         }
 
         public static boolean isGameFinished(){
@@ -65,6 +79,15 @@ import java.util.Random;
 
             heroesHit();
             heroForHealing = getHeroForHealing();
+
+
+                if (chanceForLucky()) {
+                    System.out.println("Lucky is safe!");
+                } else {
+                    luckyHealth = luckyHealth - bossDamage;
+                    System.out.println("Lucky is not safe!");
+                }
+
             printStatistics();
         }
 
@@ -125,8 +148,17 @@ import java.util.Random;
                 if (golemHealth < 0){
                     golemHealth = 0;
                 }
+                if(luckyHealth < 0){
+                    luckyHealth = 0;
+
+                }
             }
         }
+
+
+
+
+
 
         public static String getHeroForDamageBossDefence(){
 
@@ -152,5 +184,7 @@ import java.util.Random;
             }
             System.out.println(heroMedic + " = Health " + medicHealth + " = Damage [" + medicDamage + "]");
             System.out.println(heroGolem + " = Health " + golemHealth + " = Damage [" + golemDamage + "]");
+            System.out.println(heroLucky + " = Health " + luckyHealth + " = Damage [" + luckyDamage + "]");
+
         }
     }
